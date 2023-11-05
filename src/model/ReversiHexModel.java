@@ -490,6 +490,11 @@ public class ReversiHexModel implements ReversiModel {
   }
 
   @Override
+  public String getType() {
+    return "Hexagonal";
+  }
+
+  @Override
   public Disc getDiscAt(int x, int y) {
     this.gameNotYetStarted();
     if (!this.checkValidCoordinates(x, y)) {

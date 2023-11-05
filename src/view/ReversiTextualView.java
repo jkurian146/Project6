@@ -5,7 +5,6 @@ import java.util.List;
 import discs.Disc;
 import discs.DiscColor;
 import model.ReadOnlyReversiModel;
-import model.ReversiModel;
 
 /**
  * Represents a text view for a Reversi game.
@@ -29,7 +28,7 @@ public class ReversiTextualView implements ReversiView {
 
   // a method that updates a board.
   private void updateBoard() {
-    if (!appendable.toString().equals("")) {
+    if (!appendable.toString().isEmpty()) {
       this.appendable = new StringBuilder();
     }
     int nullCount = 0;
@@ -52,15 +51,15 @@ public class ReversiTextualView implements ReversiView {
         }
       }
     }
-    String boardWithoutExtraSpace = trimOriginalSpaces(this.appendable);
+    String boardWithoutExtraSpace = trimOriginalSpaces();
     this.appendable = new StringBuilder(boardWithoutExtraSpace);
-    String boardAdjusted = addNSpacesToFrontAndBack(this.appendable);
+    String boardAdjusted = addNSpacesToFrontAndBack();
     this.appendable = new StringBuilder(boardAdjusted);
   }
 
   // a method that adjusts a text view by adding the desired amount of
   // spaces to the front and back
-  private String addNSpacesToFrontAndBack(Appendable nonAdjusted) {
+  private String addNSpacesToFrontAndBack() {
     StringBuilder res = new StringBuilder();
     List<String> lines = List.of(this.appendable.toString().split("\n"));
     for (int i = 0; i < lines.size(); i++) {
@@ -76,19 +75,15 @@ public class ReversiTextualView implements ReversiView {
 
   // helper that creates a string of n spaces.
   private String createNSpaces(int spacesToAdd) {
-    StringBuilder res = new StringBuilder();
-    for (int i = 0; i < spacesToAdd; i++) {
-      res.append(" ");
-    }
-    return res.toString();
+    return " ".repeat(Math.max(0, spacesToAdd));
   }
 
   // a helper that trims spaces from the end of an unadjusted text view
-  private String trimOriginalSpaces(Appendable nonTrimmed) {
+  private String trimOriginalSpaces() {
     StringBuilder res = new StringBuilder();
     String[] lines = this.appendable.toString().split("\n");
     for (String l: lines) {
-      res.append(l.trim() + "\n");
+      res.append(l.trim()).append("\n");
     }
     return res.toString();
   }

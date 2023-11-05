@@ -82,4 +82,6 @@ public interface ReadOnlyReversiModel {
   int getScore(PlayerTurn playerTurn);
 
   boolean doesPlayerHaveLegalMove();
+
+  String getType();
 }
