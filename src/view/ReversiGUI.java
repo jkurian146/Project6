@@ -85,11 +85,11 @@ public class ReversiGUI extends JFrame implements ReversiView {
   public static void main(String[] args) {
     ReversiModel model = new ReversiHexModel();
     model.startGame(7);
-//    model.makeMove(2, 2);
-//    model.makeMove(5, 2);
-//    model.makeMove(6, 2);
-//    model.pass();
-//    model.makeMove(5,4);
+    model.makeMove(2, 2);
+    model.makeMove(5, 2);
+    model.makeMove(6, 2);
+    model.pass();
+    model.makeMove(5,4);
 
     ReversiGUI gui = new ReversiGUI(model);
     gui.render();
