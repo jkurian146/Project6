@@ -17,7 +17,7 @@ import discs.GameDisc;
 /**
  * A 'ReversiHexModel' defines a hexagonal Reversi game.
  */
-public class ReversiHexModel implements ReversiModel {
+public class ReversiHexModel extends BoardUtils implements ReversiModel {
   private boolean gameOn;
   private Disc[][] gameBoard;
   protected PlayerTurn pt;
@@ -25,7 +25,7 @@ public class ReversiHexModel implements ReversiModel {
   private final Map<PlayerTurn, DiscColor> playerColorMap;
   private int numRows;
   private int numColumns;
-  private StringBuilder playerAction;
+  private final StringBuilder playerAction;
   private GameState state;
 
   /**
@@ -245,63 +245,11 @@ public class ReversiHexModel implements ReversiModel {
   }
 
   // checks if a coordinate is within a n x n grid.
-  private boolean checkValidCoordinates(int x, int y) {
+  public boolean checkValidCoordinates(int x, int y) {
     if (x >= this.gameBoard.length || y >= this.gameBoard.length || x < 0 || y < 0) {
       return false;
     }
     return this.gameBoard[y][x] != null;
-  }
-
-  // a breadth first search algorithm that determines
-  // if a destination coordinate has any valid moves.
-  protected List<List<List<Integer>>> bfs(int destX, int destY) {
-    List<List<List<Integer>>> res = new ArrayList<>();
-    res.add(bfsHelper(destX,destY,MoveDirection.LEFT,new ArrayList<>(), true));
-    res.add(bfsHelper(destX,destY,MoveDirection.RIGHT, new ArrayList<>(), true));
-    res.add(bfsHelper(destX,destY,MoveDirection.UPLEFT, new ArrayList<>(), true));
-    res.add(bfsHelper(destX,destY,MoveDirection.UPRIGHT, new ArrayList<>(), true));
-    res.add(bfsHelper(destX,destY,MoveDirection.DOWNLEFT, new ArrayList<>(), true));
-    res.add(bfsHelper(destX,destY,MoveDirection.DOWNRIGHT, new ArrayList<>(), true));
-    return res;
-  }
-
-  // A helper for bfs that determines coordinates for a move in a certain direction
-  // returns an empty list if there are no moves for that direction
-  private List<List<Integer>> bfsHelper(int x, int y, MoveDirection moveDirection,
-                                        List<List<Integer>> res, boolean firstPass) {
-    while (true) {
-      res.add(Arrays.asList(x,y));
-      // class invariant: only the current player can alter the board (make a move)
-      // the class invariant is enforced here because we are getting a color
-      // purely based on which player turn it currently is.
-      DiscColor playerTurnColor = this.getPlayerColor(this.pt);
-      List<Integer> nextPos = MoveRules.applyShiftBasedOnDirection(x,y,moveDirection);
-      int nextPosX = nextPos.get(0);
-      int nextPosY = nextPos.get(1);
-      x = nextPosX;
-      y = nextPosY;
-      if (!this.checkValidCoordinates(nextPosX, nextPosY)) {
-        return new ArrayList<>();
-      }
-      if (firstPass) {
-        DiscColor opponentTurnColor = this.getPlayerColor(getOpponent(this.pt));
-        if (opponentTurnColor == this.getDiscAt(nextPosX, nextPosY).getColor()) {
-          res.add(Arrays.asList(x, y));
-          res.add(Arrays.asList(nextPosX, nextPosY));
-        } else {
-          return new ArrayList<>();
-        }
-        firstPass = false;
-      } else {
-        if (this.getDiscAt(nextPosX,nextPosY).getColor() == playerTurnColor) {
-          return res;
-        } else if (this.getDiscAt(nextPosX,nextPosY).getColor() == DiscColor.FACEDOWN) {
-          return new ArrayList<>();
-        } else {
-          res.add(Arrays.asList(nextPosX,nextPosY));
-        }
-      }
-    }
   }
 
   @Override
@@ -317,7 +265,7 @@ public class ReversiHexModel implements ReversiModel {
       throw new IllegalStateException("Invalid Move: Disc is not facedown.");
     }
 
-    List<List<List<Integer>>> moves = bfs(x,y);
+    List<List<List<Integer>>> moves = BoardUtils.bfs(this,x,y);
     boolean allEmptyLists = moves.stream().allMatch(List::isEmpty);
 
     if (allEmptyLists) {
@@ -424,7 +372,7 @@ public class ReversiHexModel implements ReversiModel {
           int doNothing = 0;
         }
         else if (this.gameBoard[j][i].getColor() == DiscColor.FACEDOWN) {
-          List<List<List<Integer>>> moves = bfs(i,j);
+          List<List<List<Integer>>> moves = bfs(this,i,j);
           boolean allEmptyLists = moves.stream().allMatch(List::isEmpty);
           if (!allEmptyLists) {
             return false;
@@ -442,12 +390,14 @@ public class ReversiHexModel implements ReversiModel {
   }
 
   // gets the current player color
-  private DiscColor getPlayerColor(PlayerTurn player) {
+  @Override
+  public DiscColor getPlayerColor(PlayerTurn player) {
     return playerColorMap.get(player);
   }
 
   // gets the opponents color
-  private PlayerTurn getOpponent(PlayerTurn player) {
+  @Override
+  public PlayerTurn getOpponent(PlayerTurn player) {
     if (PlayerTurn.PLAYER2 == player) {
       return PlayerTurn.PLAYER1;
     }

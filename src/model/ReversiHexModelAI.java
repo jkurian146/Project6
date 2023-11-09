@@ -10,7 +10,7 @@ import player.Player;
 import player.PlayerTurn;
 import strategy.IStrategy;
 
-public class ReversiHexModelAI extends ReversiHexModel  implements ReversiModel {
+public class ReversiHexModelAI extends ReversiHexModel implements ReversiModel {
 
   private final IStrategy iStrategy;
   private final Player player1;

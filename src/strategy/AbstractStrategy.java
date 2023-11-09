@@ -13,8 +13,8 @@ import player.Player;
 
 public abstract class AbstractStrategy implements IStrategy {
 
-  private final ReadOnlyReversiModel reversiModel;
-  private final Player player;
+  protected final ReadOnlyReversiModel reversiModel;
+  protected final Player player;
   public AbstractStrategy(ReadOnlyReversiModel reversiModel, Player player) {
     this.reversiModel = reversiModel;
     this.player = player;

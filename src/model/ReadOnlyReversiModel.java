@@ -1,6 +1,7 @@
 package model;
 
 import discs.Disc;
+import discs.DiscColor;
 import player.PlayerTurn;
 
 public interface ReadOnlyReversiModel {
@@ -84,4 +85,10 @@ public interface ReadOnlyReversiModel {
   boolean doesPlayerHaveLegalMove();
 
   String getType();
+
+  PlayerTurn getOpponent(PlayerTurn player);
+
+  DiscColor getPlayerColor(PlayerTurn player);
+
+  boolean checkValidCoordinates(int x, int y);
 }
