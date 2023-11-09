@@ -30,15 +30,20 @@ public class ReversiHexModelAI extends ReversiHexModel  implements ReversiModel 
   }
 
   private void moveNonAi(int x, int y) {
-
+    super.makeMove(x,y);
+    this.pass();
   }
 
   private void moveAi() {
     Disc[][] currentBoard = getCurrentBoardState();
-
+    this.pass();
   }
   @Override
   public void pass() {
-
+    if (super.pt == this.player1.getPlayerTurn()) {
+      super.pt = this.player2.getPlayerTurn();
+    } else {
+      super.pt = this.player1.getPlayerTurn();
+    }
   }
 }

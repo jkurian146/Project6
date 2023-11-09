@@ -20,7 +20,7 @@ import discs.GameDisc;
 public class ReversiHexModel implements ReversiModel {
   private boolean gameOn;
   private Disc[][] gameBoard;
-  private PlayerTurn pt;
+  protected PlayerTurn pt;
   private final DiscType type;
   private final Map<PlayerTurn, DiscColor> playerColorMap;
   private int numRows;
@@ -254,7 +254,7 @@ public class ReversiHexModel implements ReversiModel {
 
   // a breadth first search algorithm that determines
   // if a destination coordinate has any valid moves.
-  private List<List<List<Integer>>> bfs(int destX, int destY) {
+  protected List<List<List<Integer>>> bfs(int destX, int destY) {
     List<List<List<Integer>>> res = new ArrayList<>();
     res.add(bfsHelper(destX,destY,MoveDirection.LEFT,new ArrayList<>(), true));
     res.add(bfsHelper(destX,destY,MoveDirection.RIGHT, new ArrayList<>(), true));
